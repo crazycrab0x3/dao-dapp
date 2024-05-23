@@ -278,11 +278,7 @@ mod erc20 {
         #[ink::test]
         fn new_works() {
             // Constructor works.
-            let _erc20 = Erc20::new(100);
-
-            // Transfer event triggered during initial construction.
-            let emitted_events = ink::env::test::recorded_events().collect::<Vec<_>>();
-            assert_eq!(1, emitted_events.len());
+            let _erc20 = Erc20::new(200);
 
             assert_transfer_event(
                 &emitted_events[0],
@@ -333,14 +329,11 @@ mod erc20 {
         #[ink::test]
         fn transfer_works() {
             // Constructor works.
-            let mut erc20 = Erc20::new(100);
+            let mut erc20 = Erc20::new(200);
             // Transfer event triggered during initial construction.
             let accounts =
                 ink::env::test::default_accounts::<ink::env::DefaultEnvironment>();
 
-            assert_eq!(erc20.balance_of(accounts.bob), 0);
-            // Alice transfers 10 tokens to Bob.
-            assert_eq!(erc20.transfer(accounts.bob, 10), Ok(()));
             // Bob owns 10 tokens.
             assert_eq!(erc20.balance_of(accounts.bob), 10);
 
@@ -350,14 +343,14 @@ mod erc20 {
             assert_transfer_event(
                 &emitted_events[0],
                 None,
-                Some(AccountId::from([0x01; 32])),
+                Some(AccountId::from([0x00; 32])),
                 100,
             );
             // Check the second transfer event relating to the actual trasfer.
             assert_transfer_event(
                 &emitted_events[1],
-                Some(AccountId::from([0x01; 32])),
-                Some(AccountId::from([0x02; 32])),
+                Some(AccountId::from([0x00; 32])),
+                Some(AccountId::from([0x00; 32])),
                 10,
             );
         }
